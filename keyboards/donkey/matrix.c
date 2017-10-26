@@ -27,7 +27,7 @@
 #include "serial_link/system/serial_link.h"
 
 static const I2CConfig i2ccfg = {
-    400000 // clock speed (Hz);
+    400000,
 };
 
 /*
@@ -90,22 +90,41 @@ void print_status(msg_t response) {
 }
 
 msg_t write_byte(MCP23017_Registers_t reg, uint8_t byte) {
+    if (mcp23017_status != MSG_OK) {return mcp23017_status;}
     uint8_t data[] = { reg, byte};
-    return i2cMasterTransmitTimeout(&I2CD1, SXADDR, data, sizeof(data), NULL, 0, US2ST(1000));
+    return i2cMasterTransmitTimeout(&I2CD1, SXADDR, data, sizeof(data), NULL, 0, US2ST(SXTIMEOUT));
 }
 
 msg_t write_word(MCP23017_Registers_t reg, uint8_t byte1, uint8_t byte2) {
+    if (mcp23017_status != MSG_OK) {return mcp23017_status;}
     uint8_t data[] = { reg, byte1, byte2};
-    return i2cMasterTransmitTimeout(&I2CD1, SXADDR, data, sizeof(data), NULL, 0, US2ST(1000));
+    return i2cMasterTransmitTimeout(&I2CD1, SXADDR, data, sizeof(data), NULL, 0, US2ST(SXTIMEOUT));
 }
 
 // Fully setup the MCP23017.
 msg_t InitializeMCP23017(void) {
+    if (mcp23017_status != MSG_OK) {
+        /* xprintf("power down\n"); */
+        i2cStop(&I2CD1);
+        /* palWritePad(TEENSY_PIN19_IOPORT, TEENSY_PIN19, 0); */
+        /* palWritePad(TEENSY_PIN18_IOPORT, TEENSY_PIN18, 0); */
+        /* palSetPadMode(TEENSY_PIN19_IOPORT, TEENSY_PIN19, PAL_MODE_INPUT); */
+        /* palSetPadMode(TEENSY_PIN18_IOPORT, TEENSY_PIN18, PAL_MODE_INPUT); */
+        /* palSetPadMode(TEENSY_PIN23_IOPORT, TEENSY_PIN23, PAL_MODE_OUTPUT_PUSHPULL); */
+        /* palWritePad(TEENSY_PIN23_IOPORT, TEENSY_PIN23, 0); */
+        wait_us(1000);
+    }
+    /* xprintf("power up\n"); */
+    i2cStart(&I2CD1, &i2ccfg);
+
+    mcp23017_status = MSG_OK;
+
     msg_t response;
     response = write_word(REG_IODIRA, 0xFF, 0xFF);
     if (response != MSG_OK) { return response; }
     response = write_word(REG_GPPUA, 0x00, 0xFF);
     if (response != MSG_OK) { return response; }
+    xprintf("i2c initialized.\n");
     return MSG_OK;
 }
 
@@ -130,27 +149,28 @@ void matrix_init(void)
     memset(matrix, 0, MATRIX_ROWS);
     memset(matrix_debouncing, 0, MATRIX_ROWS);
 
+    palSetPadMode(TEENSY_PIN13_IOPORT, TEENSY_PIN13,  PAL_MODE_OUTPUT_PUSHPULL);
+    palWritePad(TEENSY_PIN13_IOPORT, TEENSY_PIN13, 0);
+
     palSetPadMode(TEENSY_PIN19_IOPORT, TEENSY_PIN19, PAL_MODE_ALTERNATIVE_2);
     palSetPadMode(TEENSY_PIN18_IOPORT, TEENSY_PIN18, PAL_MODE_ALTERNATIVE_2);
-    /* palSetPadMode(TEENSY_PIN19_IOPORT, TEENSY_PIN19, PAL_MODE_OUTPUT_OPENDRAIN); */
-    /* palSetPadMode(TEENSY_PIN18_IOPORT, TEENSY_PIN18, PAL_MODE_OUTPUT_OPENDRAIN); */
-
-    i2cStart(&I2CD1, &i2ccfg);
+    palWritePad(TEENSY_PIN23_IOPORT, TEENSY_PIN23, 1);
+    wait_us(1000);
 
     mcp23017_status = InitializeMCP23017();
 
     matrix_init_quantum();
-    wait_ms(500);
 }
 
 msg_t get_byte(MCP23017_Registers_t reg, uint8_t *buffer) {
+    if (mcp23017_status != MSG_OK) {return mcp23017_status;}
     uint8_t cmd[] = { reg };
-    return i2cMasterTransmitTimeout(&I2CD1, SXADDR, cmd, sizeof(cmd), buffer, 1, US2ST(1000));
+    return i2cMasterTransmitTimeout(&I2CD1, SXADDR, cmd, sizeof(cmd), buffer, 1, US2ST(SXTIMEOUT));
 }
 
 void GetAllRegisters(uint8_t* registers) {
     uint8_t getRegisters[] = { REG_IODIRA };
-    i2cMasterTransmitTimeout(&I2CD1, SXADDR, getRegisters, sizeof(getRegisters), registers, 22, US2ST(1000));
+    i2cMasterTransmitTimeout(&I2CD1, SXADDR, getRegisters, sizeof(getRegisters), registers, 22, US2ST(SXTIMEOUT));
 }
 
 msg_t get_mcp23017_row(int row, matrix_row_t *data) {
@@ -171,9 +191,6 @@ msg_t get_mcp23017_row(int row, matrix_row_t *data) {
     reg_data >>= 1;
 #endif
     *data = 0x7F & ~reg_data;
-    /* xprintf("%d %X\n", row, *data); */
-    /* wait_ms(1000); */
-    /* data = 0; */
 
     mcp23017_status = write_byte(REG_IODIRA, 0xFF);
     if (mcp23017_status != MSG_OK) { return mcp23017_status; }
@@ -189,6 +206,9 @@ uint8_t matrix_scan(void)
     uint8_t right_row_offset = MATRIX_ROWS - LOCAL_MATRIX_ROWS;
 
     if (mcp23017_status != MSG_OK) {
+        xprintf("mcp23017 error: %X status: ", i2cGetErrors(&I2CD1));
+        print_status(mcp23017_status);
+        wait_us(10000);
         mcp23017_status = InitializeMCP23017();
     }
 
@@ -245,9 +265,13 @@ uint8_t matrix_scan(void)
 
 
     if (debouncing && timer_elapsed(debouncing_time) > DEBOUNCE) {
+        matrix_row_t keys_pressed = 0;
         for (int row = 0; row < MATRIX_ROWS; row++) {
             matrix[row] = matrix_debouncing[row];
+            keys_pressed |= matrix_debouncing[row];
         }
+        palWritePad(TEENSY_PIN13_IOPORT, TEENSY_PIN13, keys_pressed > 0);
+
         debouncing = false;
     }
     matrix_scan_quantum();

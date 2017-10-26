@@ -1,5 +1,5 @@
 #include QMK_KEYBOARD_H
-
+#include "hal.h"
 
 
 __attribute__ ((weak))
@@ -10,11 +10,9 @@ __attribute__ ((weak))
 void matrix_scan_user(void) {
 }
 
-
 void matrix_init_kb(void) {
     // put your keyboard start-up code here
     // runs once when the firmware starts up
-
     matrix_init_user();
     // The backlight always has to be initialized, otherwise it will stay lit
 }
@@ -24,6 +22,7 @@ void matrix_scan_kb(void) {
     // runs every cycle (a lot)
 
     matrix_scan_user();
+
 }
 
 #ifdef ONEHAND_ENABLE

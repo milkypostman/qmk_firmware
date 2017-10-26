@@ -18,6 +18,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef DONKEY_CONFIG_H
 #define DONKEY_CONFIG_H
 
+/* Two versions 1 and 2 */
+#define DONKEY_VERSION 2
+
 
 /* USB Device descriptor parameter */
 #define VENDOR_ID       0xFEED
@@ -58,9 +61,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     keyboard_report->mods == (MOD_BIT(KC_LCTL) | MOD_BIT(KC_RCTL)) || \
     keyboard_report->mods == (MOD_BIT(KC_LSFT) | MOD_BIT(KC_RSFT)) \
 )
-
-/* Two versions 1 and 2 */
-#define DONKEY_VERSION 2
 
 /* key matrix size */
 #define MATRIX_ROWS 10
