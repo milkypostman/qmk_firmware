@@ -42,7 +42,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //#define MATRIX_HAS_GHOST
 
 #define TAPPING_TERM    200
-                                    // #define IGNORE_MOD_TAP_INTERRUPT // this makes it possible to do rolling combos (zx) with keys that convert to other keys on hold (z becomes ctrl when you hold it, and when this option isn't enabled, z rapidly followed by x actually sends Ctrl-x. That's bad.)
+/* this makes it possible to do rolling combos (zx) with keys that
+ * convert to other keys on hold (z becomes ctrl when you hold it, and
+ * when this option isn't enabled, z rapidly followed by x actually
+ * sends Ctrl-x. That's bad.) */
+/* #define IGNORE_MOD_TAP_INTERRUPT */
 
 /* Mechanical locking support. Use KC_LCAP, KC_LNUM or KC_LSCR instead in keymap */
 #define LOCKING_SUPPORT_ENABLE
@@ -54,6 +58,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     keyboard_report->mods == (MOD_BIT(KC_LCTL) | MOD_BIT(KC_RCTL)) || \
     keyboard_report->mods == (MOD_BIT(KC_LSFT) | MOD_BIT(KC_RSFT)) \
 )
+
+/* Two versions 1 and 2 */
+#define DONKEY_VERSION 2
 
 /* key matrix size */
 #define MATRIX_ROWS 10

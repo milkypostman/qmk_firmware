@@ -158,30 +158,22 @@ msg_t get_mcp23017_row(int row, matrix_row_t *data) {
 
     // bits are reversed from pins...
     uint8_t mask = 0xFF & ~(1 << (7 - row));
-    /* mcp23017_status = write_byte(REG_IODIRA, 0xFF & ~(1 << row)); */
     mcp23017_status = write_byte(REG_IODIRA, mask);
     if (mcp23017_status != MSG_OK) { return mcp23017_status; }
 
-    /* mcp23017_status = write_byte(REG_GPIOA, 0xFF & ~(1 << row)); */
     mcp23017_status = write_byte(REG_GPIOA, mask);
     if (mcp23017_status != MSG_OK) { return mcp23017_status; }
 
     uint8_t reg_data = 0;
     mcp23017_status = get_byte(REG_GPIOB, &reg_data);
     if (mcp23017_status != MSG_OK) { return mcp23017_status; }
+#if (DONKEY_VERSION == 2)
+    reg_data >>= 1;
+#endif
     *data = 0x7F & ~reg_data;
-    /* uint16_t test = reg_data << LOCAL_MATRIX_ROWS; */
-    /* xprintf("ROW: %d -- %X\n", row, test); */
-    /* xprintf("ROW: %d\n", row); */
-    /* uint8_t initRegisters[22]; */
-    /* GetAllRegisters(initRegisters); */
-    /* if (mcp23017_status != MSG_OK) { return mcp23017_status; } */
-    /* for (int i=0; i <22; i++) { */
-    /*     xprintf("%d: %X\n", i, initRegisters[i]); */
-    /*     wait_ms(100); */
-    /* } */
-    /* xprintf("\n"); */
-    /* wait_ms(50); */
+    /* xprintf("%d %X\n", row, *data); */
+    /* wait_ms(1000); */
+    /* data = 0; */
 
     mcp23017_status = write_byte(REG_IODIRA, 0xFF);
     if (mcp23017_status != MSG_OK) { return mcp23017_status; }
