@@ -77,7 +77,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //#define MATRIX_HAS_GHOST
 
 /* Set 0 if debouncing isn't needed */
-#define DEBOUNCE    5
+#define DEBOUNCE    0
 
 #define SERIAL_LINK_BAUD 562500
 #define SERIAL_LINK_THREAD_PRIORITY (NORMALPRIO - 1)

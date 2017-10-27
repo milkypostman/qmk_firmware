@@ -67,7 +67,7 @@ CUSTOM_MATRIX    = yes # Custom matrix file for the ErgoDox EZ
 SLEEP_LED_ENABLE = no # Breathing sleep LED during USB suspend
 NKRO_ENABLE      = no # USB Nkey Rollover - if this doesn't work, see here: https://github.com/tmk/tmk_keyboard/wiki/FAQ#nkro-doesnt-work
 UNICODE_ENABLE   = yes # Unicode
-ONEHAND_ENABLE   = yes # Allow swapping hands of keyboard
+ONEHAND_ENABLE   = no # Allow swapping hands of keyboard
 
 SERIAL_LINK_ENABLE = no
 VISUALIZER_ENABLE = no

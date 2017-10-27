@@ -30,14 +30,6 @@ static const I2CConfig i2ccfg = {
     400000,
 };
 
-/*
- * Infinity ErgoDox Pinusage:
- * Column pins are input with internal pull-down. Row pins are output and strobe with high.
- * Key is high or 1 when it turns on.
- *
- *     col: { PTD1, PTD4, PTD5, PTD6, PTD7 }
- *     row: { PTB2, PTB3, PTB18, PTB19, PTC0, PTC9, PTC10, PTC11, PTD0 }
- */
 /* matrix state(1:on, 0:off) */
 static matrix_row_t matrix[MATRIX_ROWS];
 static matrix_row_t matrix_debouncing[MATRIX_ROWS];
@@ -94,7 +86,6 @@ msg_t write_byte(MCP23017_Registers_t reg, uint8_t byte) {
     uint8_t data[] = { reg, byte};
     return i2cMasterTransmitTimeout(&I2CD1, SXADDR, data, sizeof(data), NULL, 0, US2ST(SXTIMEOUT));
 }
-
 msg_t write_word(MCP23017_Registers_t reg, uint8_t byte1, uint8_t byte2) {
     if (mcp23017_status != MSG_OK) {return mcp23017_status;}
     uint8_t data[] = { reg, byte1, byte2};
@@ -106,15 +97,14 @@ msg_t InitializeMCP23017(void) {
     if (mcp23017_status != MSG_OK) {
         /* xprintf("power down\n"); */
         i2cStop(&I2CD1);
-        /* palWritePad(TEENSY_PIN19_IOPORT, TEENSY_PIN19, 0); */
-        /* palWritePad(TEENSY_PIN18_IOPORT, TEENSY_PIN18, 0); */
-        /* palSetPadMode(TEENSY_PIN19_IOPORT, TEENSY_PIN19, PAL_MODE_INPUT); */
-        /* palSetPadMode(TEENSY_PIN18_IOPORT, TEENSY_PIN18, PAL_MODE_INPUT); */
-        /* palSetPadMode(TEENSY_PIN23_IOPORT, TEENSY_PIN23, PAL_MODE_OUTPUT_PUSHPULL); */
-        /* palWritePad(TEENSY_PIN23_IOPORT, TEENSY_PIN23, 0); */
+        palWritePad(TEENSY_PIN19_IOPORT, TEENSY_PIN19, 0);
+        palWritePad(TEENSY_PIN18_IOPORT, TEENSY_PIN18, 0);
+        palSetPadMode(TEENSY_PIN19_IOPORT, TEENSY_PIN19, PAL_MODE_INPUT);
+        palSetPadMode(TEENSY_PIN18_IOPORT, TEENSY_PIN18, PAL_MODE_INPUT);
         wait_us(1000);
+        palSetPadMode(TEENSY_PIN19_IOPORT, TEENSY_PIN19, PAL_MODE_ALTERNATIVE_2);
+        palSetPadMode(TEENSY_PIN18_IOPORT, TEENSY_PIN18, PAL_MODE_ALTERNATIVE_2);
     }
-    /* xprintf("power up\n"); */
     i2cStart(&I2CD1, &i2ccfg);
 
     mcp23017_status = MSG_OK;

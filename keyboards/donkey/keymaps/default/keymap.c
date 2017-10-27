@@ -5,14 +5,13 @@
 
 #define BASE 0 // default layer
 #define NORMAN 1 // symbols
-#define MDIA 2 // symbols
+#define MEDIA 2 // symbols
 
 enum custom_keycodes {
     PLACEHOLDER = SAFE_RANGE, // can always be here
-    EPRM,
-    VRSN,
-    RGB_SLD
+    SHRUGGIE
 };
+
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 /* Keymap 0: Basic layer
@@ -40,46 +39,25 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 // Otherwise, it needs KC_*
     [BASE] = LAYOUT_donkey(  // layer 0 : default
         // left hand
-        KC_EQUAL,     KC_1,        KC_2,          KC_3,    KC_4,     KC_5,            MO(MDIA),
-        KC_TAB,       KC_Q,        KC_W,          KC_E,    KC_R,     KC_T,            TO(NORMAN),
-        KC_ESC,       KC_A,        KC_S,          KC_D,    KC_F,     KC_G,            KC_NO,
-        KC_LSFT,      KC_Z,        KC_X,          KC_C,    KC_V,     KC_B,            LALT_T(KC_ESC),
-        KC_HOME,      KC_GRAVE,    KC_GRAVE,      KC_LEFT, KC_RIGHT, LCTL_T(KC_BSPC), LGUI_T(KC_DEL),
+        KC_EQL,     KC_1,        KC_2,          KC_3,    KC_4,     KC_5,            DF(NORMAN),
+        KC_NO,      KC_Q,        KC_W,          KC_E,    KC_R,     KC_T,            LSFT(KC_TAB),
+        MO(MEDIA),      KC_A,        KC_S,          KC_D,    KC_F,     KC_G,            KC_TAB,
+        KC_LSFT,    KC_Z,        KC_X,          KC_C,    KC_V,     KC_B,            LGUI_T(KC_ESC),
+        KC_HOME,    KC_GRAVE,    KC_GRAVE,      KC_LEFT, KC_RIGHT, LCTL_T(KC_BSPC), LALT_T(KC_DEL),
 
         // right hand
         KC_PGUP,          KC_6,             KC_7,    KC_8,    KC_9,    KC_0,       KC_MINS,
-        KC_PGDOWN,        KC_Y,             KC_U,    KC_I,    KC_O,    KC_P,       KC_BSLASH,
+        KC_PGDN,       KC_Y,             KC_U,    KC_I,    KC_O,    KC_P,       KC_BSLASH,
         KC_BSPC,          KC_H,             KC_J,    KC_K,    KC_L,    KC_SCLN,    KC_QUOT,
-        RALT_T(KC_TAB),   KC_N,             KC_M,    KC_COMM, KC_DOT,  KC_SLSH,    KC_RSFT,
-        RGUI_T(KC_ENTER), RCTL_T(KC_SPACE), KC_DOWN, KC_UP, KC_LBRC, KC_RBRC,    KC_END
+        KC_TAB,           KC_N,             KC_M,    KC_COMM, KC_DOT,  KC_SLSH,    KC_RSFT,
+        KC_ENTER, KC_SPACE, KC_DOWN, KC_UP, KC_LBRC, KC_RBRC,    KC_END
         ),
-/* Keymap 1: Symbol Layer
- *
- * ,---------------------------------------------------.           ,--------------------------------------------------.
- * |Version  |  F1  |  F2  |  F3  |  F4  |  F5  |      |           |      |  F6  |  F7  |  F8  |  F9  |  F10 |   F11  |
- * |---------+------+------+------+------+------+------|           |------+------+------+------+------+------+--------|
- * |         |   !  |   @  |   {  |   }  |   |  |      |           |      |   Up |   7  |   8  |   9  |   *  |   F12  |
- * |---------+------+------+------+------+------|      |           |      |------+------+------+------+------+--------|
- * |         |   #  |   $  |   (  |   )  |   `  |------|           |------| Down |   4  |   5  |   6  |   +  |        |
- * |---------+------+------+------+------+------|      |           |      |------+------+------+------+------+--------|
- * |         |   %  |   ^  |   [  |   ]  |   ~  |      |           |      |   &  |   1  |   2  |   3  |   \  |        |
- * `---------+------+------+------+------+-------------'           `-------------+------+------+------+------+--------'
- *   | EPRM  |      |      |      |      |                                       |      |    . |   0  |   =  |      |
- *   `-----------------------------------'                                       `----------------------------------'
- *                                        ,-------------.       ,-------------.
- *                                        |Animat|      |       |Toggle|Solid |
- *                                 ,------|------|------|       |------+------+------.
- *                                 |Bright|Bright|      |       |      |Hue-  |Hue+  |
- *                                 |ness- |ness+ |------|       |------|      |      |
- *                                 |      |      |      |       |      |      |      |
- *                                 `--------------------'       `--------------------'
- */
 // NORMAN LAYOUT
     [NORMAN] = LAYOUT_donkey(
         // left hand
-        _______,     _______,    _______,      _______, _______, _______, MO(MDIA),
-        _______,     KC_Q,       KC_W,         KC_D,    KC_F,    KC_K,    TO(BASE),
-        _______,     KC_A,       KC_S,         KC_E,    KC_T,    KC_G,    KC_NO,
+        _______,     _______,    _______,      _______, _______, _______, DF(BASE),
+        _______,     KC_Q,       KC_W,         KC_D,    KC_F,    KC_K,    _______,
+        _______,     KC_A,       KC_S,         KC_E,    KC_T,    KC_G,    _______,
         _______,     KC_Z,       KC_X,         KC_C,    KC_V,    KC_B,    _______,
         _______,     _______,    _______,      _______, _______, _______, _______,
 
@@ -90,39 +68,17 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         _______,  KC_P,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH,  _______,
         _______,  _______, _______, _______, _______, _______,  _______
         ),
-/* Keymap 2: Media and mouse keys
- *
- * ,--------------------------------------------------.           ,--------------------------------------------------.
- * |        |      |      |      |      |      |      |           |      |      |      |      |      |      |        |
- * |--------+------+------+------+------+-------------|           |------+------+------+------+------+------+--------|
- * |        |      |      | MsUp |      |      |      |           |      |      |      |      |      |      |        |
- * |--------+------+------+------+------+------|      |           |      |------+------+------+------+------+--------|
- * |        |      |MsLeft|MsDown|MsRght|      |------|           |------|      |      |      |      |      |  Play  |
- * |--------+------+------+------+------+------|      |           |      |------+------+------+------+------+--------|
- * |        |      |      |      |      |      |      |           |      |      |      | Prev | Next |      |        |
- * `--------+------+------+------+------+-------------'           `-------------+------+------+------+------+--------'
- *   |      |      |      | Lclk | Rclk |                                       |VolUp |VolDn | Mute |      |      |
- *   `----------------------------------'                                       `----------------------------------'
- *                                        ,-------------.       ,-------------.
- *                                        |      |      |       |      |      |
- *                                 ,------|------|------|       |------+------+------.
- *                                 |      |      |      |       |      |      |Brwser|
- *                                 |      |      |------|       |------|      |Back  |
- *                                 |      |      |      |       |      |      |      |
- *                                 `--------------------'       `--------------------'
- */
-// MEDIA AND MOUSE
-    [MDIA] = LAYOUT_donkey(
+    [MEDIA] = LAYOUT_donkey(
         // left hand
-        KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, _______,
         KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO,
         KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO,
+        _______, LCA(KC_L), KC_NO, KC_NO, KC_NO, KC_NO, KC_NO,
         KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO,
         KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO,
 
         // right hand
-        KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO,
-        KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO,
+        KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, MAGIC_SWAP_ALT_GUI,
+        KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, MAGIC_UNSWAP_ALT_GUI,
         KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO,
         KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO,
         KC_NO, KC_NO, KC_VOLD, KC_VOLU, KC_MUTE, KC_NO, KC_NO
@@ -167,6 +123,10 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 /*       } */
 /*     return MACRO_NONE; */
 /* }; */
+
+bool process_record_user(uint16_t keycode, keyrecord_t *record) {
+    return true;
+};
 
 /* bool process_record_user(uint16_t keycode, keyrecord_t *record) { */
 /*   switch (keycode) { */
