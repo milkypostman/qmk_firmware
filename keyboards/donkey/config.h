@@ -19,7 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define DONKEY_CONFIG_H
 
 /* Two versions 1 and 2 */
-#define DONKEY_VERSION 2
+#define DONKEY_VERSION 1
 
 
 /* USB Device descriptor parameter */
@@ -50,6 +50,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
  * when this option isn't enabled, z rapidly followed by x actually
  * sends Ctrl-x. That's bad.) */
 /* #define IGNORE_MOD_TAP_INTERRUPT */
+
+#define PERMISSIVE_HOLD
 
 /* Mechanical locking support. Use KC_LCAP, KC_LNUM or KC_LSCR instead in keymap */
 #define LOCKING_SUPPORT_ENABLE

@@ -5,7 +5,7 @@
 
 #define BASE 0 // default layer
 #define NORMAN 1 // symbols
-#define MEDIA 2 // symbols
+#define FUN 2 // symbols
 
 enum custom_keycodes {
     PLACEHOLDER = SAFE_RANGE, // can always be here
@@ -40,17 +40,18 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [BASE] = LAYOUT_donkey(  // layer 0 : default
         // left hand
         KC_EQL,     KC_1,        KC_2,          KC_3,    KC_4,     KC_5,            DF(NORMAN),
-        KC_NO,      KC_Q,        KC_W,          KC_E,    KC_R,     KC_T,            LSFT(KC_TAB),
-        MO(MEDIA),      KC_A,        KC_S,          KC_D,    KC_F,     KC_G,            KC_TAB,
-        KC_LSFT,    KC_Z,        KC_X,          KC_C,    KC_V,     KC_B,            LGUI_T(KC_ESC),
-        KC_HOME,    KC_GRAVE,    KC_GRAVE,      KC_LEFT, KC_RIGHT, LCTL_T(KC_BSPC), LALT_T(KC_DEL),
+        KC_GRAVE,      KC_Q,        KC_W,          KC_E,    KC_R,     KC_T,            LSFT(KC_TAB),
+        MO(FUN),      KC_A,        KC_S,          KC_D,    KC_F,     KC_G,            KC_TAB,
+        KC_HOME,    KC_Z,        KC_X,          KC_C,    KC_V,     KC_B,            LGUI_T(KC_ESC),
+        MO(FUN),    KC_NO,    KC_NO,      KC_NO, KC_LCTRL, LALT_T(KC_BSPACE), KC_LSFT,
 
         // right hand
+
         KC_PGUP,          KC_6,             KC_7,    KC_8,    KC_9,    KC_0,       KC_MINS,
         KC_PGDN,       KC_Y,             KC_U,    KC_I,    KC_O,    KC_P,       KC_BSLASH,
         KC_BSPC,          KC_H,             KC_J,    KC_K,    KC_L,    KC_SCLN,    KC_QUOT,
-        KC_TAB,           KC_N,             KC_M,    KC_COMM, KC_DOT,  KC_SLSH,    KC_RSFT,
-        KC_ENTER, KC_SPACE, KC_DOWN, KC_UP, KC_LBRC, KC_RBRC,    KC_END
+        LGUI_T(KC_TAB),           KC_N,             KC_M,    KC_COMM, KC_DOT,  KC_SLSH,    KC_END,
+        KC_RSFT, KC_ENTER, KC_SPACE, KC_NO, KC_LBRC, KC_RBRC,    MO(FUN)
         ),
 // NORMAN LAYOUT
     [NORMAN] = LAYOUT_donkey(
@@ -68,20 +69,20 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         _______,  KC_P,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH,  _______,
         _______,  _______, _______, _______, _______, _______,  _______
         ),
-    [MEDIA] = LAYOUT_donkey(
+    [FUN] = LAYOUT_donkey(
         // left hand
         KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO,
         KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO,
         _______, LCA(KC_L), KC_NO, KC_NO, KC_NO, KC_NO, KC_NO,
         KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO,
-        KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO,
+        _______, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO,
 
         // right hand
         KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, MAGIC_SWAP_ALT_GUI,
         KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, MAGIC_UNSWAP_ALT_GUI,
+        KC_NO, KC_LEFT, KC_DOWN, KC_UP, KC_RIGHT, KC_NO, KC_NO,
         KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO,
-        KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO,
-        KC_NO, KC_NO, KC_VOLD, KC_VOLU, KC_MUTE, KC_NO, KC_NO
+        KC_NO, KC_NO, KC_VOLD, KC_VOLU, KC_MUTE, KC_NO, _______
         ),
 /*     /\*    _______, _______, _______, _______, _______, _______, _______, *\/ */
 /*     /\*    _______, _______, _______, KC_MS_U, _______, _______, _______, *\/ */
